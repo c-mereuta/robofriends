@@ -1,20 +1,29 @@
 import React, { Component } from "react";
+import "./App.css";
 import Cardlist from "./Cardlist";
 import SearchBox from "./Searchbox";
-import { robots } from "./robots";
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      robots: robots,
+      robots: [],
       searchfield: "",
     };
   }
 
+  componentDidMount() {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((response) => {
+        return response.json();
+      })
+      .then((users) => {
+        this.setState({ robots: users });
+      });
+  }
+
   onSearchChange = (event) => {
     // event.target.value always gets back what event is typed/entered.
-    console.log(event.target.value);
     this.setState({ searchfield: event.target.value });
   };
 
@@ -26,7 +35,7 @@ class App extends Component {
     });
     return (
       <div className="tc">
-        <h1>RoboFriends</h1>
+        <h1 className="f2">RoboFriends</h1>
         <SearchBox searchChange={this.onSearchChange} />
         <Cardlist robots={filteredRobots} />
       </div>
